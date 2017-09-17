@@ -63,7 +63,7 @@ public class OriginalGhosts implements EnemyController
 		public StateType getNextState(int ghostID)
 		{
 			//If we are outside of the lair then we want to change to scatter state
-			if(currentGameState.getLairTime(ghostID) <= 0)
+			if(currentGameState.getEnemy(ghostID).getLairTime() <= 0)
 			{
 				return StateType.Scatter;
 			}
@@ -105,14 +105,14 @@ public class OriginalGhosts implements EnemyController
 		public StateType getNextState(int ghostID)
 		{
 			//If we are eaten in frightened state then we want to go to lair state
-			if(currentGameState.getLairTime(ghostID) > 0)
+			if(currentGameState.getEnemy(ghostID).getLairTime() > 0)
 			{
 				return StateType.Lair;
 			}
 			
 			//If the timer runs out and we are still in frightened state
 			//then we want to change back to the previous state
-			if(currentGameState.isEdible(ghostID) == false)
+			if(!currentGameState.getEnemy(ghostID).isEdible())
 			{
 				return previousGhostStates[ghostID].getStateID();
 			}
@@ -226,7 +226,7 @@ public class OriginalGhosts implements EnemyController
 		public StateType getNextState(int ghostID)
 		{
 			
-			if(currentGameState.isEdible(ghostID))
+			if(currentGameState.getEnemy(ghostID).isEdible())
 			{
 				return StateType.Frightened;
 			}
@@ -316,7 +316,7 @@ public class OriginalGhosts implements EnemyController
 				{
 					if(nodeTarget != null)
 					{
-						nodeTarget = currentGameState.getNeighbor(nodeTarget, currPacManDirection);
+						nodeTarget = nodeTarget.getNeighbor(currPacManDirection);
 					}
 					
 				}
@@ -326,7 +326,7 @@ public class OriginalGhosts implements EnemyController
 					for(int iLeft = 0; iLeft < numNodesAhead; iLeft++)
 					{
 						if(nodeTarget != null)
-							nodeTarget = currentGameState.getNeighbor(nodeTarget, Game.LEFT);
+							nodeTarget = nodeTarget.getNeighbor(Game.LEFT);
 					}
 				}
 				if(nodeTarget != null)
@@ -341,7 +341,7 @@ public class OriginalGhosts implements EnemyController
 				Node currPacManLoc = currentGameState.getHero().getLocation();
 				Node[] powerPillNodes = currentGameState.getPowerPillNodes();
 				Node currScatterTarget = powerPillNodes[2];
-				if(currentGameState.getPathDistance(currentGameState.getCurEnemyLoc(ghostID), currPacManLoc) > 40)
+				if(currentGameState.getPathDistance(currentGameState.getEnemy(ghostID).getLocation(), currPacManLoc) > 40)
 				{
 					return currentGameState.getNextEnemyDir(ghostID,currPacManLoc,true,DM.PATH);
 				}
@@ -355,7 +355,7 @@ public class OriginalGhosts implements EnemyController
 		@Override
 		public StateType getNextState(int ghostID)
 		{
-			if(currentGameState.isEdible(ghostID))
+			if(currentGameState.getEnemy(ghostID).isEdible())
 			{
 				return StateType.Frightened;
 			}
