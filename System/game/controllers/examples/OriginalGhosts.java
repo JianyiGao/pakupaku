@@ -134,22 +134,22 @@ public class OriginalGhosts implements EnemyController
 			if(ghostID == Blinky)
 			{
 				//Top right
-				return currentGameState.getNextEnemyDir(ghostID, powerPillNodes[1],true,DM.PATH);
+				return currentGameState.getEnemy(ghostID).getNextDir(powerPillNodes[1], true);
 			}
 			else if(ghostID == Pinky)
 			{
 				//Top Left
-				return currentGameState.getNextEnemyDir(ghostID,powerPillNodes[0],true,DM.PATH);
+				return currentGameState.getEnemy(ghostID).getNextDir(powerPillNodes[0], true);
 			}
 			else if(ghostID == Inky)
 			{
 				//Bottom Right
-				return currentGameState.getNextEnemyDir(ghostID,powerPillNodes[3],true,DM.PATH);
+				return currentGameState.getEnemy(ghostID).getNextDir(powerPillNodes[3], true);
 			}
 			else if(ghostID == Clyde)
 			{
 				//Bottom Left
-				return currentGameState.getNextEnemyDir(ghostID,powerPillNodes[2],true,DM.PATH);
+				return currentGameState.getEnemy(ghostID).getNextDir(powerPillNodes[2], true);
 			}
 			
 			return -1;
@@ -209,15 +209,15 @@ public class OriginalGhosts implements EnemyController
 				//switched from scatter to chase. On the third or later scatter he scattered toward pacman's
 				//location essentially keeping him permanently in chase.
 				if(toChaseSwitches >= 2)
-					return currentGameState.getNextEnemyDir(ghostID, currentGameState.getHero().getLocation(), true, DM.PATH);
-				
-				return currentGameState.getNextEnemyDir(ghostID, powerPillNodes[1],true,DM.PATH);
+					return currentGameState.getEnemy(ghostID).getNextDir(currentGameState.getHero().getLocation(), true);
+
+				return currentGameState.getEnemy(ghostID).getNextDir(powerPillNodes[1], true);
 			case Pinky:
-				return currentGameState.getNextEnemyDir(ghostID, powerPillNodes[0],true,DM.PATH);
+				return currentGameState.getEnemy(ghostID).getNextDir(powerPillNodes[0], true);
 			case Inky:
-				return currentGameState.getNextEnemyDir(ghostID, powerPillNodes[3],true,DM.PATH);
+				return currentGameState.getEnemy(ghostID).getNextDir(powerPillNodes[3], true);
 			case Clyde:
-				return currentGameState.getNextEnemyDir(ghostID, powerPillNodes[2],true,DM.PATH);
+				return currentGameState.getEnemy(ghostID).getNextDir(powerPillNodes[2], true);
 			}
 			return -1;
 		}
@@ -295,7 +295,7 @@ public class OriginalGhosts implements EnemyController
 			{
 			case Blinky:
 				//Blinky always takes the shortest path directly to pacman
-				return currentGameState.getNextEnemyDir(ghostID, currentGameState.getHero().getLocation(), true, DM.PATH);
+				return currentGameState.getEnemy(ghostID).getNextDir(currentGameState.getHero().getLocation(), true);
 			case Pinky:
 			case Inky:
 				//Pinky and Inky both look a certain number of nodes ahead of pacman to try to intercept
@@ -330,10 +330,10 @@ public class OriginalGhosts implements EnemyController
 					}
 				}
 				if(nodeTarget != null)
-					return currentGameState.getNextEnemyDir(ghostID, nodeTarget,true,DM.PATH);
+					return currentGameState.getEnemy(ghostID).getNextDir(nodeTarget, true);
 				else
-					return currentGameState.getNextEnemyDir(ghostID, currentGameState.getHero().getLocation(),true,DM.PATH);
-				
+					return currentGameState.getEnemy(ghostID).getNextDir(currentGameState.getHero().getLocation(), true);
+
 			case Clyde:
 				//If clyde is over a certain distance he goes straight for pacman
 				//If he less than that distance from pacman he goes towards his scatter
@@ -341,15 +341,15 @@ public class OriginalGhosts implements EnemyController
 				Node currPacManLoc = currentGameState.getHero().getLocation();
 				Node[] powerPillNodes = currentGameState.getPowerPillNodes();
 				Node currScatterTarget = powerPillNodes[2];
-				if(currentGameState.getPathDistance(currentGameState.getEnemy(ghostID).getLocation(), currPacManLoc) > 40)
+				if(currentGameState.getEnemy(ghostID).getLocation().getPathDistance(currPacManLoc) > 40)
 				{
-					return currentGameState.getNextEnemyDir(ghostID,currPacManLoc,true,DM.PATH);
+					return currentGameState.getEnemy(ghostID).getNextDir(currentGameState.getHero().getLocation(), true);
 				}
 				else
-					return currentGameState.getNextEnemyDir(ghostID,currScatterTarget,true,DM.PATH);
-				
+					return currentGameState.getEnemy(ghostID).getNextDir(currScatterTarget, true);
+
 			}
-			return currentGameState.getNextEnemyDir(ghostID, currentGameState.getHero().getLocation(),true,DM.PATH);
+			return currentGameState.getEnemy(ghostID).getNextDir(currentGameState.getHero().getLocation(), true);
 		}
 		
 		@Override
