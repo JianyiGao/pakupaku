@@ -129,7 +129,7 @@ public class OriginalGhosts implements EnemyController
 		@Override
 		public int getDirectionToMove(int ghostID)
 		{
-			
+
 			List<Node> powerPillNodes = currentGameState.getCurMaze().getPowerPillNodes();
 			if(ghostID == Blinky)
 			{
@@ -199,7 +199,7 @@ public class OriginalGhosts implements EnemyController
 		@Override
 		public int getDirectionToMove(int ghostID)
 		{
-			
+
 			List<Node> powerPillNodes = currentGameState.getCurMaze().getPowerPillNodes();
 			
 			switch(ghostID)
@@ -381,10 +381,15 @@ public class OriginalGhosts implements EnemyController
 	
 	private IState[] previousGhostStates = {null,null,null,null};
 	private IState[] currentGhostStates = {lairStates[Blinky],lairStates[Pinky],lairStates[Inky],lairStates[Clyde]};
+
 	//Place your game logic here to play the game as the ghosts
-	public int[] getActions(Game game,long timeDue)
+	private int[] actions;
+	public int[] getActions() { return actions; }
+	public void init() { }
+	public void shutdown() { }
+	public void update(Game game,long timeDue)
 	{
-		int[] ghostDirections = {-1,-1,-1,-1};
+		actions = new int[] {-1,-1,-1,-1};
 		
 		currentGameState = game;
 		if(previousGameState == null)
@@ -393,13 +398,11 @@ public class OriginalGhosts implements EnemyController
 		}
 		for(int iGhost = 0; iGhost < 4; iGhost++)
 		{
-			ghostDirections[iGhost] = getNextAction(iGhost,timeDue);
+			actions[iGhost] = getNextAction(iGhost,timeDue);
 			//ghostDirections[iGhost] = -1;
 		}
 		
 		previousGameState = currentGameState;
-		
-		return ghostDirections;
 	}
 	
 	//I have to reset some data or else it will be carried over
