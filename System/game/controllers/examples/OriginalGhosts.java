@@ -1,9 +1,9 @@
 package game.controllers.examples;
 
+import java.util.List;
 import game.controllers.EnemyController;
-import game.core.Game;
-import game.core.Game.DM;
-import game.core.Node;
+import game.models.Game;
+import game.models.Node;
 
 /*
  * Original Pac-man Ghost AI. There are some differences just because of the 
@@ -130,26 +130,26 @@ public class OriginalGhosts implements EnemyController
 		public int getDirectionToMove(int ghostID)
 		{
 			
-			Node[] powerPillNodes = currentGameState.getPowerPillNodes();
+			List<Node> powerPillNodes = currentGameState.getCurMaze().getPowerPillNodes();
 			if(ghostID == Blinky)
 			{
 				//Top right
-				return currentGameState.getEnemy(ghostID).getNextDir(powerPillNodes[1], true);
+				return currentGameState.getEnemy(ghostID).getNextDir(powerPillNodes.get(1), true);
 			}
 			else if(ghostID == Pinky)
 			{
 				//Top Left
-				return currentGameState.getEnemy(ghostID).getNextDir(powerPillNodes[0], true);
+				return currentGameState.getEnemy(ghostID).getNextDir(powerPillNodes.get(0), true);
 			}
 			else if(ghostID == Inky)
 			{
 				//Bottom Right
-				return currentGameState.getEnemy(ghostID).getNextDir(powerPillNodes[3], true);
+				return currentGameState.getEnemy(ghostID).getNextDir(powerPillNodes.get(3), true);
 			}
 			else if(ghostID == Clyde)
 			{
 				//Bottom Left
-				return currentGameState.getEnemy(ghostID).getNextDir(powerPillNodes[2], true);
+				return currentGameState.getEnemy(ghostID).getNextDir(powerPillNodes.get(2), true);
 			}
 			
 			return -1;
@@ -200,7 +200,7 @@ public class OriginalGhosts implements EnemyController
 		public int getDirectionToMove(int ghostID)
 		{
 			
-			Node[] powerPillNodes = currentGameState.getPowerPillNodes();
+			List<Node> powerPillNodes = currentGameState.getCurMaze().getPowerPillNodes();
 			
 			switch(ghostID)
 			{
@@ -211,13 +211,13 @@ public class OriginalGhosts implements EnemyController
 				if(toChaseSwitches >= 2)
 					return currentGameState.getEnemy(ghostID).getNextDir(currentGameState.getHero().getLocation(), true);
 
-				return currentGameState.getEnemy(ghostID).getNextDir(powerPillNodes[1], true);
+				return currentGameState.getEnemy(ghostID).getNextDir(powerPillNodes.get(1), true);
 			case Pinky:
-				return currentGameState.getEnemy(ghostID).getNextDir(powerPillNodes[0], true);
+				return currentGameState.getEnemy(ghostID).getNextDir(powerPillNodes.get(0), true);
 			case Inky:
-				return currentGameState.getEnemy(ghostID).getNextDir(powerPillNodes[3], true);
+				return currentGameState.getEnemy(ghostID).getNextDir(powerPillNodes.get(3), true);
 			case Clyde:
-				return currentGameState.getEnemy(ghostID).getNextDir(powerPillNodes[2], true);
+				return currentGameState.getEnemy(ghostID).getNextDir(powerPillNodes.get(2), true);
 			}
 			return -1;
 		}
@@ -321,12 +321,12 @@ public class OriginalGhosts implements EnemyController
 					
 				}
 				
-				if(currPacManDirection == Game.UP)
+				if(currPacManDirection == Game.Direction.UP)
 				{
 					for(int iLeft = 0; iLeft < numNodesAhead; iLeft++)
 					{
 						if(nodeTarget != null)
-							nodeTarget = nodeTarget.getNeighbor(Game.LEFT);
+							nodeTarget = nodeTarget.getNeighbor(Game.Direction.LEFT);
 					}
 				}
 				if(nodeTarget != null)
@@ -339,8 +339,8 @@ public class OriginalGhosts implements EnemyController
 				//If he less than that distance from pacman he goes towards his scatter
 				//location in the bottom left.
 				Node currPacManLoc = currentGameState.getHero().getLocation();
-				Node[] powerPillNodes = currentGameState.getPowerPillNodes();
-				Node currScatterTarget = powerPillNodes[2];
+				List<Node> powerPillNodes = currentGameState.getCurMaze().getPowerPillNodes();
+				Node currScatterTarget = powerPillNodes.get(2);
 				if(currentGameState.getEnemy(ghostID).getLocation().getPathDistance(currPacManLoc) > 40)
 				{
 					return currentGameState.getEnemy(ghostID).getNextDir(currentGameState.getHero().getLocation(), true);
