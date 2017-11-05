@@ -414,12 +414,9 @@ public class Devastator implements AttackerController
 	}
 	
 	//Place your game logic here to play the game as Ms Pac-Man
-	private int action;
-	public int getAction() { return action; }
-
-	public void init() { }
-	public void shutdown() { }
-	public void update(Game game,long timeDue)
+	public void init(Game game) { }
+	public void shutdown(Game game) { }
+	public int update(Game game,long timeDue)
 	{
 		currentGameState = game;
 		if (previousGameState == null)
@@ -432,7 +429,7 @@ public class Devastator implements AttackerController
 		int directionToMove = getDirectionToClosestPill();
 
 		previousGameState = currentGameState;
-		action = directionToMove;
+		return directionToMove;
 	}
 
 	/**

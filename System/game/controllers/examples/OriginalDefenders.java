@@ -384,13 +384,11 @@ public class OriginalDefenders implements DefenderController
 	private IState[] currentGhostStates = {lairStates[Blinky],lairStates[Pinky],lairStates[Inky],lairStates[Clyde]};
 
 	//Place your game logic here to play the game as the ghosts
-	private int[] actions;
-	public int[] getActions() { return actions; }
-	public void init() { }
-	public void shutdown() { }
-	public void update(Game game,long timeDue)
+	public void init(Game game) { }
+	public void shutdown(Game game) { }
+	public int[] update(Game game,long timeDue)
 	{
-		actions = new int[] {-1,-1,-1,-1};
+		int[] actions = new int[] {-1,-1,-1,-1};
 		
 		currentGameState = game;
 		if(previousGameState == null)
@@ -404,6 +402,8 @@ public class OriginalDefenders implements DefenderController
 		}
 		
 		previousGameState = currentGameState;
+
+		return actions;
 	}
 	
 	//I have to reset some data or else it will be carried over
