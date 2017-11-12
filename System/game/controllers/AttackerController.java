@@ -8,11 +8,9 @@ import game.models.Game;
  * Up - Right - Down - Left -> 0 - 1 - 2 - 3
  * Any other number is considered to be a lack of action (Neutral). 
  */
-public interface HeroController
+public interface AttackerController
 {
-	public void init();
-	public void update(Game game, long timeDue);
-	public void shutdown();
-
-	public int getAction();
+	public void init(Game game);
+	public int update(Game game, long timeDue);
+	public void shutdown(Game game);
 }

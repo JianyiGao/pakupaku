@@ -1,7 +1,8 @@
 package game.controllers.examples;
 
 import java.util.List;
-import game.controllers.EnemyController;
+
+import game.controllers.DefenderController;
 import game.models.Game;
 import game.models.Node;
 
@@ -10,7 +11,7 @@ import game.models.Node;
  * limitations of the system.
  * @author John Wileczek
  */
-public class OriginalGhosts implements EnemyController
+public class OriginalDefenders implements DefenderController
 {
 	//Need to keep track of a previous and current game states for
 	//timer and such
@@ -63,7 +64,7 @@ public class OriginalGhosts implements EnemyController
 		public StateType getNextState(int ghostID)
 		{
 			//If we are outside of the lair then we want to change to scatter state
-			if(currentGameState.getEnemy(ghostID).getLairTime() <= 0)
+			if(currentGameState.getDefender(ghostID).getLairTime() <= 0)
 			{
 				return StateType.Scatter;
 			}
@@ -105,14 +106,14 @@ public class OriginalGhosts implements EnemyController
 		public StateType getNextState(int ghostID)
 		{
 			//If we are eaten in frightened state then we want to go to lair state
-			if(currentGameState.getEnemy(ghostID).getLairTime() > 0)
+			if(currentGameState.getDefender(ghostID).getLairTime() > 0)
 			{
 				return StateType.Lair;
 			}
 			
 			//If the timer runs out and we are still in frightened state
 			//then we want to change back to the previous state
-			if(!currentGameState.getEnemy(ghostID).isEdible())
+			if(!currentGameState.getDefender(ghostID).isVulnerable())
 			{
 				return previousGhostStates[ghostID].getStateID();
 			}
@@ -134,22 +135,22 @@ public class OriginalGhosts implements EnemyController
 			if(ghostID == Blinky)
 			{
 				//Top right
-				return currentGameState.getEnemy(ghostID).getNextDir(powerPillNodes.get(1), true);
+				return currentGameState.getDefender(ghostID).getNextDir(powerPillNodes.get(1), true);
 			}
 			else if(ghostID == Pinky)
 			{
 				//Top Left
-				return currentGameState.getEnemy(ghostID).getNextDir(powerPillNodes.get(0), true);
+				return currentGameState.getDefender(ghostID).getNextDir(powerPillNodes.get(0), true);
 			}
 			else if(ghostID == Inky)
 			{
 				//Bottom Right
-				return currentGameState.getEnemy(ghostID).getNextDir(powerPillNodes.get(3), true);
+				return currentGameState.getDefender(ghostID).getNextDir(powerPillNodes.get(3), true);
 			}
 			else if(ghostID == Clyde)
 			{
 				//Bottom Left
-				return currentGameState.getEnemy(ghostID).getNextDir(powerPillNodes.get(2), true);
+				return currentGameState.getDefender(ghostID).getNextDir(powerPillNodes.get(2), true);
 			}
 			
 			return -1;
@@ -209,15 +210,15 @@ public class OriginalGhosts implements EnemyController
 				//switched from scatter to chase. On the third or later scatter he scattered toward pacman's
 				//location essentially keeping him permanently in chase.
 				if(toChaseSwitches >= 2)
-					return currentGameState.getEnemy(ghostID).getNextDir(currentGameState.getHero().getLocation(), true);
+					return currentGameState.getDefender(ghostID).getNextDir(currentGameState.getAttacker().getLocation(), true);
 
-				return currentGameState.getEnemy(ghostID).getNextDir(powerPillNodes.get(1), true);
+				return currentGameState.getDefender(ghostID).getNextDir(powerPillNodes.get(1), true);
 			case Pinky:
-				return currentGameState.getEnemy(ghostID).getNextDir(powerPillNodes.get(0), true);
+				return currentGameState.getDefender(ghostID).getNextDir(powerPillNodes.get(0), true);
 			case Inky:
-				return currentGameState.getEnemy(ghostID).getNextDir(powerPillNodes.get(3), true);
+				return currentGameState.getDefender(ghostID).getNextDir(powerPillNodes.get(3), true);
 			case Clyde:
-				return currentGameState.getEnemy(ghostID).getNextDir(powerPillNodes.get(2), true);
+				return currentGameState.getDefender(ghostID).getNextDir(powerPillNodes.get(2), true);
 			}
 			return -1;
 		}
@@ -226,7 +227,7 @@ public class OriginalGhosts implements EnemyController
 		public StateType getNextState(int ghostID)
 		{
 			
-			if(currentGameState.getEnemy(ghostID).isEdible())
+			if(currentGameState.getDefender(ghostID).isVulnerable())
 			{
 				return StateType.Frightened;
 			}
@@ -295,7 +296,7 @@ public class OriginalGhosts implements EnemyController
 			{
 			case Blinky:
 				//Blinky always takes the shortest path directly to pacman
-				return currentGameState.getEnemy(ghostID).getNextDir(currentGameState.getHero().getLocation(), true);
+				return currentGameState.getDefender(ghostID).getNextDir(currentGameState.getAttacker().getLocation(), true);
 			case Pinky:
 			case Inky:
 				//Pinky and Inky both look a certain number of nodes ahead of pacman to try to intercept
@@ -308,8 +309,8 @@ public class OriginalGhosts implements EnemyController
 				{
 					numNodesAhead = 2;
 				}
-				int currPacManDirection = currentGameState.getHero().getDirection();
-				Node nodeTarget = currentGameState.getHero().getLocation();
+				int currPacManDirection = currentGameState.getAttacker().getDirection();
+				Node nodeTarget = currentGameState.getAttacker().getLocation();
 				
 				
 				for(int iAhead = 0; iAhead < numNodesAhead; iAhead++)
@@ -330,32 +331,32 @@ public class OriginalGhosts implements EnemyController
 					}
 				}
 				if(nodeTarget != null)
-					return currentGameState.getEnemy(ghostID).getNextDir(nodeTarget, true);
+					return currentGameState.getDefender(ghostID).getNextDir(nodeTarget, true);
 				else
-					return currentGameState.getEnemy(ghostID).getNextDir(currentGameState.getHero().getLocation(), true);
+					return currentGameState.getDefender(ghostID).getNextDir(currentGameState.getAttacker().getLocation(), true);
 
 			case Clyde:
 				//If clyde is over a certain distance he goes straight for pacman
 				//If he less than that distance from pacman he goes towards his scatter
 				//location in the bottom left.
-				Node currPacManLoc = currentGameState.getHero().getLocation();
+				Node currPacManLoc = currentGameState.getAttacker().getLocation();
 				List<Node> powerPillNodes = currentGameState.getCurMaze().getPowerPillNodes();
 				Node currScatterTarget = powerPillNodes.get(2);
-				if(currentGameState.getEnemy(ghostID).getLocation().getPathDistance(currPacManLoc) > 40)
+				if(currentGameState.getDefender(ghostID).getLocation().getPathDistance(currPacManLoc) > 40)
 				{
-					return currentGameState.getEnemy(ghostID).getNextDir(currentGameState.getHero().getLocation(), true);
+					return currentGameState.getDefender(ghostID).getNextDir(currentGameState.getAttacker().getLocation(), true);
 				}
 				else
-					return currentGameState.getEnemy(ghostID).getNextDir(currScatterTarget, true);
+					return currentGameState.getDefender(ghostID).getNextDir(currScatterTarget, true);
 
 			}
-			return currentGameState.getEnemy(ghostID).getNextDir(currentGameState.getHero().getLocation(), true);
+			return currentGameState.getDefender(ghostID).getNextDir(currentGameState.getAttacker().getLocation(), true);
 		}
 		
 		@Override
 		public StateType getNextState(int ghostID)
 		{
-			if(currentGameState.getEnemy(ghostID).isEdible())
+			if(currentGameState.getDefender(ghostID).isVulnerable())
 			{
 				return StateType.Frightened;
 			}
@@ -383,13 +384,11 @@ public class OriginalGhosts implements EnemyController
 	private IState[] currentGhostStates = {lairStates[Blinky],lairStates[Pinky],lairStates[Inky],lairStates[Clyde]};
 
 	//Place your game logic here to play the game as the ghosts
-	private int[] actions;
-	public int[] getActions() { return actions; }
-	public void init() { }
-	public void shutdown() { }
-	public void update(Game game,long timeDue)
+	public void init(Game game) { }
+	public void shutdown(Game game) { }
+	public int[] update(Game game,long timeDue)
 	{
-		actions = new int[] {-1,-1,-1,-1};
+		int[] actions = new int[] {-1,-1,-1,-1};
 		
 		currentGameState = game;
 		if(previousGameState == null)
@@ -403,6 +402,8 @@ public class OriginalGhosts implements EnemyController
 		}
 		
 		previousGameState = currentGameState;
+
+		return actions;
 	}
 	
 	//I have to reset some data or else it will be carried over

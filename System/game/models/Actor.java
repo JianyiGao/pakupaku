@@ -1,9 +1,17 @@
 package game.models;
 
-import game.system._Node;
+import java.util.List;
 
 public interface Actor extends Cloneable
 {
-    public Node getLocation();
-    public int getDirection();
+    Node getLocation();
+    int getDirection();
+
+    List<Node> getPathTo(Node to);
+    int getNextDir(Node to, boolean approach);
+
+    Actor getTargetActor(List<? extends Actor> targets, boolean nearest);
+    Node getTargetNode(List<Node> targets, boolean nearest);
+
+    int getReverse();
 }

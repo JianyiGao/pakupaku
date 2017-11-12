@@ -1,31 +1,31 @@
 package game.controllers.examples;
 
-import game.controllers.EnemyController;
+import java.util.*;
+import game.controllers.DefenderController;
 import game.models.Game.DM;
 import game.models.Game;
-import game.system._Game;
-import game.models.Enemy;
+import game.models.Defender;
 
-public class Legacy implements EnemyController
+public class Legacy implements DefenderController
 {
-	private int[] actions;
-	public int[] getActions() { return actions; }
-	public void init() { }
-	public void shutdown() { }
-	public void update(Game game,long timeDue)
+	public void init(Game game) { }
+	public void shutdown(Game game) { }
+	public int[] update(Game game,long timeDue)
 	{
-		actions=new int[Game.NUM_ENEMY];
+		int[] actions=new int[Game.NUM_DEFENDER];
 		DM[] dms=Game.DM.values();
 
-		Enemy[] enemies = (Enemy[]) game.getEnemies().toArray();
+		List<Defender> enemies = game.getDefenders();
 
-		for(int i=0;i<actions.length-1;i++)
+		for(int i=0;i<actions.length;i++)
 		{
-			Enemy enemy = enemies[i];
-			if (enemy.requiresAction())
-				actions[i] = enemy.getNextDir(game.getHero().getLocation(), true);
+			Defender defender = enemies.get(i);
+//			if (defender.requiresAction())
+			actions[i] = defender.getNextDir(game.getAttacker().getLocation(), true);
 			//for each ghost; last ghost takes random action
 		}
-		actions[3]= Game.rng.nextInt(4);
+//		actions[3] = Game.rng.nextInt(4);
+
+		return actions;
 	}
 }

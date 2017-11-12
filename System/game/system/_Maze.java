@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import game.models.DuoMap;
+import game.models.Defender;
 import game.models.Node;
 import game.models.Maze;
 
@@ -17,19 +17,19 @@ public final class _Maze implements Maze
     public int getNumberPills() { return pillNodes.length; }
     public int getNumberPowerPills() { return powerPillNodes.length; }
     public String getName() { return name; }
-    public Node getInitialHeroPosition() { return initialHeroPosition; }
-    public Node getInitialEnemiesPosition() { return initialEnemiesPosition; }
+    public Node getInitialAttackerPosition() { return initialHeroPosition; }
+    public Node getInitialDefendersPosition() { return initialEnemiesPosition; }
     public int getNumberOfNodes() { return graph.length; }
     public List<Node> getPillNodes() { return Arrays.asList(Arrays.copyOf(pillNodes, pillNodes.length)); }
     public List<Node> getPowerPillNodes() { return Arrays.asList(Arrays.copyOf(powerPillNodes, powerPillNodes.length)); }
     public List<Node> getJunctionNodes() { return Arrays.asList(Arrays.copyOf(junctionNodes, junctionNodes.length)); }
 
     protected DuoMap<Node, Node, Integer> distances;
-    protected Node[] pillNodes, powerPillNodes, junctionNodes;
-    protected Node[] graph;
+    protected _Node[] pillNodes, powerPillNodes, junctionNodes;
+    protected _Node[] graph;
 
     //The actual maze, stored as a graph (set of nodes)
-    protected Node initialHeroPosition, lairPosition, initialEnemiesPosition;
+    protected _Node initialHeroPosition, lairPosition, initialEnemiesPosition;
     protected int width, height;	//_Maze-specific information
     protected String name;																//Name of the _Maze
 
